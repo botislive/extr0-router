@@ -5,6 +5,7 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 const geistMono = Geist_Mono({
@@ -14,7 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "extr0 | Intelligent LLM Gateway",
-  description: "Analyze, Route, and Optimize your LLM interactions in real-time.",
+  description:
+    "Analyze, Route, and Optimize your LLM interactions in real-time.",
 };
 
 export default function RootLayout({
@@ -25,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans bg-background text-foreground antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} font-sans bg-[hsl(240,10%,3.9%)] text-white antialiased`}
       >
         {children}
       </body>

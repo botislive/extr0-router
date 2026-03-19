@@ -1,72 +1,136 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui;
-  --color-background: #0B0B0F;
-  --color-obsidian: #16161D;
-  --color-obsidian-lighter: #202028;
-  --color-acid-green: #ccff00;
+  --font-sans: "Geist", "Inter", ui-sans-serif, system-ui;
+  --font-mono: "Geist Mono", "Courier New", monospace;
+
+  /* extr0 Monochrome Color Palette (Linear Inspired) */
+  --color-level-0: #000000;                /* Pure black background */
+  --color-level-1: #0A0A0A;                /* Surfaces */
+  --color-level-2: #121212;                /* Elevated Cards/Modals */
+  --color-border: rgba(255, 255, 255, 0.1);  /* Borders */
+  --color-accent: #FFFFFF;                 /* Pure White Accent */
+  --color-text: rgba(255, 255, 255, 0.95); /* Primary Text */
+  --color-text-muted: rgba(255, 255, 255, 0.55); /* Muted Text */
 }
 
 :root {
-  --background: #0B0B0F;
-  --foreground: #F8FAFC;
-  --obsidian: #16161D;
-  --border: rgba(255, 255, 255, 0.15);
-  --acid-green: #ccff00;
+  /* Elevation Layers */
+  --background: #000000;
+  --surface-1: #0A0A0A;
+  --surface-2: #121212;
+  --foreground: rgba(255, 255, 255, 0.95);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --accent: #FFFFFF;
+  --accent-glow: rgba(255, 255, 255, 0.15);
+
+  /* 8px Grid System Base Unit */
+  --spacing-base: 0.25rem; /* 4px */
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@layer base {
+  html,
+  body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    background: var(--background);
+    color: var(--foreground);
+    font-weight: 400; /* Standard weight */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  background: var(--background);
-  color: var(--foreground);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* 8px Spacing Utility Classes Reference */
-/* Consistent 8px rhythm (p-2 = 8px, p-4 = 16px, etc.) */
-
-/* Tactical Feedback Animations */
+/* === extr0 DESIGN SYSTEM UTILITIES === */
 @layer utilities {
-  .tactile-click {
-    transition: transform 100ms cubic-bezier(0.1, 0, 0.2, 1);
-  }
-  .tactile-click:active {
-    transform: scale(0.96);
+  /* === GLASS CARD COMPONENT === */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Concentric boundary */
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-  .sharp-border {
-    border: 1px solid var(--border);
+  /* === INPUT FIELD STATES === */
+  .input-idle {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Hide scrollbar for Chrome, Safari and Opera */
+  .input-focus {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 16px rgba(255, 255, 255, 0.08);
+    outline: none;
+  }
+
+  /* === BUTTON INTERACTIONS === */
+  .button-base {
+    border-radius: 8px;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .button-base:active {
+    transform: scale(0.98);
+  }
+
+  /* === RETINA-THIN BORDERS === */
+  .border-retina {
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* === MOTION: FADE-IN ANIMATION === */
+  /* Keyframes moved outside @layer utilities */
+
+  .fade-in-up {
+    animation: fadeInUp 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* === ROUNDED MASKS === */
+  .fade-mask-bottom {
+    mask-image: linear-gradient(to bottom, white 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, white 50%, transparent 100%);
+  }
+
+  /* === STREAMING PULSE EFFECT === */
+  /* Keyframes moved outside @layer utilities */
+
+  .pulse-border {
+    animation: pulse-border 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* === HIDE SCROLLBAR === */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
-  /* Aggressive noise grain overlay */
+  /* === SUBTLE NOISE OVERLAY === */
   .noise-bg {
     position: relative;
   }
   .noise-bg::before {
     content: "";
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    width: 100vw; height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
     z-index: 50;
     opacity: 0.04;
@@ -74,9 +138,22 @@ body {
   }
 }
 
-::selection {
-  background: var(--acid-green);
-  color: #000;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-
+@keyframes pulse-border {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
