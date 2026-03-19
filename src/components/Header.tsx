@@ -1,11 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase-browser";
+import { Session } from "@supabase/supabase-js";
 
 export function Header() {
+  const [session, setSession] = useState<Session | null>(null);
+  const router = useRouter();
+  const supabase = createClient();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  };
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -10 }}
@@ -30,17 +55,40 @@ export function Header() {
           >
             API Docs
           </Link>
-          <Link
-            href="/signin"
-            className={cn(
-              "button-base text-[13px] font-medium tracking-[0.01em] px-3 py-1.5",
-              "bg-white/[0.04] hover:bg-white/[0.08] text-white",
-              "border border-white/[0.08] hover:border-white/[0.12]",
-              "antialiased transition-all duration-200 active:scale-[0.98]"
-            )}
-          >
-            Sign In
-          </Link>
+          
+          {session ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-[13px] font-medium tracking-[0.01em] text-white/50 hover:text-white transition-colors duration-200 antialiased"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className={cn(
+                  "button-base text-[13px] font-medium tracking-[0.01em] px-3 py-1.5",
+                  "bg-white/[0.04] hover:bg-white/[0.08] text-white",
+                  "border border-white/[0.08] hover:border-white/[0.12]",
+                  "antialiased transition-all duration-200 active:scale-[0.98]"
+                )}
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className={cn(
+                "button-base text-[13px] font-medium tracking-[0.01em] px-3 py-1.5",
+                "bg-white/[0.04] hover:bg-white/[0.08] text-white",
+                "border border-white/[0.08] hover:border-white/[0.12]",
+                "antialiased transition-all duration-200 active:scale-[0.98]"
+              )}
+            >
+              Sign In
+            </Link>
+          )}
         </nav>
       </div>
     </motion.header>

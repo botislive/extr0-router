@@ -67,7 +67,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Global KPIs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 [grid-auto-rows:1fr]">
           <KpiCard
             title="Requests Processed"
             value={metrics.totalRequests.toString()}
@@ -209,23 +209,22 @@ function KpiCard({
         damping: 30,
         delay: index * 0.05,
       }}
+      className="h-full"
     >
-      <GlassCard className="p-6 relative overflow-hidden group" hover>
-        <div className="flex justify-between items-start mb-6">
-          <h3 className="text-xs font-medium text-white/60 antialiased">
+      <GlassCard className="group relative flex h-full min-h-[176px] flex-col justify-between overflow-hidden p-6" hover>
+        <div className="mb-5 flex min-h-[28px] items-start justify-between gap-3">
+          <h3 className="text-xs font-medium text-white/60 antialiased leading-5">
             {title}
           </h3>
-          {icon}
+          <span className="shrink-0 pt-0.5">{icon}</span>
         </div>
-        <div className="space-y-2">
-          <p className="text-3xl md:text-4xl font-semibold tracking-[-0.02em] antialiased">
+        <div className="flex min-h-[66px] flex-col justify-end gap-2">
+          <p className="text-3xl md:text-[44px] leading-none font-semibold tracking-[-0.02em] antialiased tabular-nums">
             {value}
           </p>
-          {subtitle && (
-            <p className="text-[10px] font-medium text-white/50 antialiased">
-              {subtitle}
-            </p>
-          )}
+          <p className="min-h-[16px] text-[10px] font-medium text-white/50 antialiased leading-4">
+            {subtitle ?? "\u00a0"}
+          </p>
         </div>
       </GlassCard>
     </motion.div>
